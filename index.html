@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengumuman Kelulusan - UPT SDN 191 GRESIK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom right, #ff5e62, #fff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: #ff5e62;
+      font-size: 1.8rem;
+      font-weight: 900;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    input {
+      padding: 0.7rem;
+      border: 2px solid #ff5e62;
+      border-radius: 10px;
+      width: 100%;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7e5f;
+      color: #fff;
+      padding: 0.7rem;
+      border: none;
+      width: 100%;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 0.5rem;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      position: relative;
+      max-width: 400px;
+    }
+
+    .modal-content h1 {
+      color: #2e7d32;
+      font-size: 2rem;
+    }
+
+    .modal-content h2 {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="LOGO%20SEKOLAH.png" alt="Logo Sekolah" class="logo" />
+    <h1>PENGUMUMAN KELULUSAN</h1>
+    <h2>UPT SDN 191 GRESIK</h2>
+    <p>Tahun Ajaran 2024–2025</p>
+    <input type="text" id="nisnInput" placeholder="Masukkan NISN (10 digit)" maxlength="10" />
+    <button onclick="cekKelulusan()">Cek Kelulusan</button>
+    <p class="note">Petunjuk: Masukkan 10 digit NISN tanpa spasi.</p>
+  </div>
+
+  <div class="modal" id="modalKelulusan">
+    <div class="modal-content">
+      <canvas class="confetti" id="confettiCanvas"></canvas>
+      <h1>SELAMAT!</h1>
+      <h2 id="namaSiswa"></h2>
+      <p id="nisnSiswa"></p>
+      <p>Kelas 6</p>
+      <h1 style="color: #2e7d32;">LULUS</h1>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const dataSiswa = {
+      "3124297010": "AHMED SA'ID OSMAN",
+      "0137924636": "ARNOLD BELVA ASAFI MAHFUD",
+      "0131744859": "ARYA HIMAWAN PRABOWO",
+      "0123002426": "ARYA SURYA HANDARU",
+      "0137927035": "EDELWAYS JIHAN WAHYUDI",
+      "0136887272": "FAHMI HUSAINI",
+      "0138830441": "GALANG ANABA",
+      "0122676882": "ICHSAN DZAKWAN SULTAN AZMI",
+      "0133029042": "ISYAN NUR ALFATH AL AMIN",
+      "0124044342": "KHEYLA DWI AYU RAHMA",
+      "0128255089": "MUHAMAD YOGA PRATAMA",
+      "0121127677": "MUHAMMAD ALVIAN BUDI PRASETYO",
+      "0126031046": "MUHAMMAD FAIZ FADILLAH",
+      "0133349523": "MUHAMMAD NAUFAL SURYA AJI",
+      "0129484217": "MUHAMMAD RAFI ARDIANSAH",
+      "0125498923": "NAJWA LAYKEZA YAFARANI",
+      "0122166645": "NIZAR 'AZMI RISKYWANDANA",
+      "0128810478": "PRATAMA SURYA HADINATA",
+      "0136602327": "PUTRI NAYLA KHOIRUN NISA",
+      "0137450484": "RAVAEL PERMANA KONTHOWARNO MAHANANI",
+      "0135403867": "RHUSHIANA BEAUTY ANANDA DEWI",
+      "0132728460": "SALSABILLA APRILLIA",
+      "0123816432": "SATYA ADINATA PUTRA",
+      "0127151256": "SITI NURONYYATUL I'YAL",
+      "0122450740": "TIARA FARADIBA"
+    };
+
+    function cekKelulusan() {
+      const nisn = document.getElementById('nisnInput').value;
+      const nama = dataSiswa[nisn];
+      if (nama) {
+        document.getElementById('namaSiswa').innerText = nama;
+        document.getElementById('nisnSiswa').innerText = "NISN: " + nisn;
+        document.getElementById('modalKelulusan').style.display = 'flex';
+
+        // Efek konfeti
+        const duration = 3 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+          });
+          confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        })();
+      } else {
+        alert('NISN tidak ditemukan!');
+      }
+    }
+
+    // Tutup modal jika diklik di luar
+    document.getElementById('modalKelulusan').addEventListener('click', function (e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
