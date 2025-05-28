@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pengumuman Kelulusan - UPT SDN 191 GRESIK</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
   <style>
@@ -16,7 +16,7 @@
       height: 100vh;
     }
 
-    .container {
+    .container, .countdown-container {
       background: #fff;
       border-radius: 20px;
       padding: 2rem;
@@ -110,10 +110,30 @@
       pointer-events: none;
       z-index: -1;
     }
+
+    .countdown {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Countdown Placeholder -->
+  <div class="countdown-container" id="countdownContainer">
+    <img src="LOGO%20SEKOLAH.png" alt="Logo Sekolah" class="logo" />
+    <h1>Pengumuman Kelulusan</h1>
+    <h2>UPT SDN 191 GRESIK</h2>
+    <p>Pengumuman akan dibuka dalam:</p>
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+  <!-- Konten Pengumuman -->
+  <div class="container hidden" id="mainContent">
     <img src="LOGO%20SEKOLAH.png" alt="Logo Sekolah" class="logo" />
     <h1>PENGUMUMAN KELULUSAN</h1>
     <h2>UPT SDN 191 GRESIK</h2>
@@ -123,6 +143,7 @@
     <p class="note">Petunjuk: Masukkan 10 digit NISN tanpa spasi.</p>
   </div>
 
+  <!-- Modal Kelulusan -->
   <div class="modal" id="modalKelulusan">
     <div class="modal-content">
       <canvas class="confetti" id="confettiCanvas"></canvas>
@@ -205,6 +226,30 @@
         this.style.display = 'none';
       }
     });
+
+    // Timer countdown
+    const bukaTanggal = new Date("2025-06-02T07:01:00+07:00").getTime();
+    const countdownEl = document.getElementById("countdown");
+    const countdownContainer = document.getElementById("countdownContainer");
+    const mainContent = document.getElementById("mainContent");
+
+    const countdownInterval = setInterval(function() {
+      const now = new Date().getTime();
+      const selisih = bukaTanggal - now;
+
+      const hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
+      const jam = Math.floor((selisih % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const menit = Math.floor((selisih % (1000 * 60 * 60)) / (1000 * 60));
+      const detik = Math.floor((selisih % (1000 * 60)) / 1000);
+
+      if (selisih > 0) {
+        countdownEl.innerHTML = `${hari} hari ${jam} jam ${menit} menit ${detik} detik`;
+      } else {
+        clearInterval(countdownInterval);
+        countdownContainer.classList.add("hidden");
+        mainContent.classList.remove("hidden");
+      }
+    }, 1000);
   </script>
 </body>
 </html>
